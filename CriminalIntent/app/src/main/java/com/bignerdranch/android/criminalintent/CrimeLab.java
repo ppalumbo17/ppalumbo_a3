@@ -21,6 +21,7 @@ public class CrimeLab {
 
     private Context mContext;
     private SQLiteDatabase mDatabase;
+    private List<Crime> mCrimes = new ArrayList<>();
 
     public static CrimeLab get(Context context) {
         if (sCrimeLab == null) {
@@ -45,7 +46,10 @@ public class CrimeLab {
     public void deleteCrime(Crime c){
         ContentValues values = getContentValues(c);
         String crimeTitle = c.getTitle();
-        mDatabase.delete(CrimeTable.NAME, null, crimeTitle);
+        mDatabase.delete(CrimeTable.NAME, CrimeTable.Cols.TITLE + "=" + crimeTitle, null);
+
+        mCrimes = getCrimes();
+        mCrimes.remove(c);
 
     }
 
@@ -56,7 +60,7 @@ public class CrimeLab {
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            crimes.add(cursor.getCrime());
+            //crimes.add(cursor.getCrime());
             cursor.moveToNext();
         }
         cursor.close();

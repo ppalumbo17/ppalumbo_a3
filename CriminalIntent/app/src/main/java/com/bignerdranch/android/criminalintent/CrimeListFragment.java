@@ -17,13 +17,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
+import java.util.UUID;
 
 public class CrimeListFragment extends Fragment {
 
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
-
+    private static final String ARG_CRIME_ID = "crimeID";
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
@@ -31,6 +33,8 @@ public class CrimeListFragment extends Fragment {
 
     private LinearLayout mNoCrimeLayout;
     private Button mAddCrime;
+
+    private Crime mCrime;
 
     public interface Callbacks {
         void onCrimeSelected(Crime crime);
@@ -40,6 +44,9 @@ public class CrimeListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        //UUID crimeID = (UUID)getArguments().getSerializable(ARG_CRIME_ID);
+        //mCrime = CrimeLab.get(getActivity()).getCrime(crimeID);
     }
 
     @Override
@@ -117,7 +124,12 @@ public class CrimeListFragment extends Fragment {
                 updateSubtitle();
                 return true;
             case R.id.menu_item_delete_crime:
-                CrimeLab.get(getActivity()).
+                //crime = new Crime();
+                Toast.makeText(getActivity(), "Deleted Crime", Toast.LENGTH_SHORT).show();
+                CrimeLab.get(getActivity()).deleteCrime(mCrime);
+                //getActivity().finish();
+                updateUI();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -175,7 +187,7 @@ public class CrimeListFragment extends Fragment {
         private TextView mDateTextView;
         private CheckBox mSolvedCheckBox;
 
-        private Crime mCrime;
+        //private Crime mCrime;
 
         public CrimeHolder(View itemView) {
             super(itemView);

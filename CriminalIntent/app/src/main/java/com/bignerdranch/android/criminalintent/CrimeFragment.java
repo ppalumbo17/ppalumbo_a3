@@ -49,6 +49,7 @@ public class CrimeFragment extends Fragment {
     private EditText mTitleField;
     private Button mDateButton;
     private Button mTimeButton;
+    private Button mCallButton;
     private CheckBox mSolvedCheckbox;
     private Button mReportButton;
     private Button mSuspectButton;
@@ -177,6 +178,31 @@ public class CrimeFragment extends Fragment {
                 i = Intent.createChooser(i, getString(R.string.send_report));
 
                 startActivity(i);
+
+        mCallButton = (Button)v.findViewById(R.id.call_button);
+        mCallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Uri callUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+//                String selection =ContactsContract.CommonDataKinds.Phone._ID + " = ?";
+//                String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER};
+//                String[] select = {Long.toString(mCrime.getContactId())};
+//                Cursor cursor = getActivity().getContentResolver().query(callUri, projection, selection, select, null);
+//                if(cursor != null && cursor.getCount() >0){
+//                    try {
+//                        cursor.moveToFirst();
+//                        String number = cursor.getString(0);
+//                        Uri phoneNum = Uri.parse("tel:" + number);
+//                        Intent intent = new Intent(Intent.ACTION_DIAL, phoneNum);
+//                        cursor.close();
+//                        startActivity(intent);
+//                    }
+//                    finally {
+//                        cursor.close();
+//                    }
+//                }
+            }
+        });
             }
         });
 
@@ -258,7 +284,7 @@ public class CrimeFragment extends Fragment {
             // Specify which fields you want your query to return
             // values for.
             String[] queryFields = new String[] {
-                    ContactsContract.Contacts.DISPLAY_NAME,
+                    ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts._ID
             };
             // Perform your query - the contactUri is like a "where"
             // clause here
@@ -277,7 +303,9 @@ public class CrimeFragment extends Fragment {
                 c.moveToFirst();
 
                 String suspect = c.getString(0);
+                long contactId = c.getLong(1);
                 mCrime.setSuspect(suspect);
+                mCrime.setContactId(contactId);
                 updateCrime();
                 mSuspectButton.setText(suspect);
             } finally {

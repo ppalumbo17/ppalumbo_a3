@@ -1,11 +1,13 @@
 package com.bignerdranch.android.criminalintent;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 
 public class CrimeListActivity extends SingleFragmentActivity
         implements CrimeListFragment.Callbacks, CrimeFragment.Callbacks {
-
+//    Resources res = getResources();
+//    boolean twoPane = res.getBoolean(R.bool.two_pane);
     @Override
     protected Fragment createFragment() {
         return new CrimeListFragment();
@@ -13,7 +15,12 @@ public class CrimeListActivity extends SingleFragmentActivity
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.activity_masterdetail;
+        if(getResources().getBoolean(R.bool.two_pane)){
+            return R.layout.activity_twopane;
+        }
+
+            return R.layout.activity_masterdetail;
+
     }
 
     @Override
