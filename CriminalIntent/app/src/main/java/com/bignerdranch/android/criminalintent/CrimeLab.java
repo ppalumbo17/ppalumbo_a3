@@ -42,6 +42,13 @@ public class CrimeLab {
         mDatabase.insert(CrimeTable.NAME, null, values);
     }
 
+    public void deleteCrime(Crime c){
+        ContentValues values = getContentValues(c);
+        String crimeTitle = c.getTitle();
+        mDatabase.delete(CrimeTable.NAME, null, crimeTitle);
+
+    }
+
     public List<Crime> getCrimes() {
         List<Crime> crimes = new ArrayList<>();
 

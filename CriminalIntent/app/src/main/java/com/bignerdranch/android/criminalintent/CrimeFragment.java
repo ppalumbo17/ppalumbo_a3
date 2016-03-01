@@ -25,6 +25,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.Date;
@@ -35,6 +36,7 @@ public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "DialogDate";
     private static final String DIALOG_TIME = "DialogTime";
+    private static final String DIALOG_ZOOM = "DialogZoom";
 
 
     private static final int REQUEST_DATE = 0;
@@ -53,6 +55,8 @@ public class CrimeFragment extends Fragment {
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
     private Callbacks mCallbacks;
+    //private TextView mNoCrime;
+    private Date mTheDate;
 
     /**
      * Required interface for hosting activities.
@@ -103,6 +107,8 @@ public class CrimeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
 
+        //mNoCrime = (TextView)v.findViewById(R.id.no_crime_text);
+        //mNoCrime.setVisibility(View.INVISIBLE);
         mTitleField = (EditText) v.findViewById(R.id.crime_title);
         mTitleField.setText(mCrime.getTitle());
         mTitleField.addTextChangedListener(new TextWatcher() {
@@ -213,6 +219,16 @@ public class CrimeFragment extends Fragment {
         });
 
         mPhotoView = (ImageView) v.findViewById(R.id.crime_photo);
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mPhotoFile != null && mPhotoFile.exists()){
+                    FragmentManager fragment = getFragmentManager();
+
+                    ZoomFragment.newInstance(mPhotoFile).show(fragment, DIALOG_ZOOM);
+                }
+            }
+        });
         updatePhotoView();
 
         return v;
@@ -225,12 +241,19 @@ public class CrimeFragment extends Fragment {
         }
 
         if (requestCode == REQUEST_DATE) {
-            Date date = (Date) data
+            mTheDate = (Date) data
                     .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-            mCrime.setDate(date);
+            mCrime.setDate(mTheDate);
             updateCrime();
             updateDate();
-        } else if (requestCode == REQUEST_CONTACT && data != null) {
+        }
+        else if (requestCode == REQUEST_TIME){
+            mTheDate = (Date)data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+            mCrime.setDate(mTheDate);
+            updateCrime();
+            updateDate();
+        }
+        else if (requestCode == REQUEST_CONTACT && data != null) {
             Uri contactUri = data.getData();
             // Specify which fields you want your query to return
             // values for.

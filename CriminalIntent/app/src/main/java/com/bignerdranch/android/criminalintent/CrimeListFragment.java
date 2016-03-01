@@ -13,7 +13,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -27,9 +29,9 @@ public class CrimeListFragment extends Fragment {
     private boolean mSubtitleVisible;
     private Callbacks mCallbacks;
 
-    /**
-     * Required interface for hosting activities.
-     */
+    private LinearLayout mNoCrimeLayout;
+    private Button mAddCrime;
+
     public interface Callbacks {
         void onCrimeSelected(Crime crime);
     }
@@ -58,6 +60,11 @@ public class CrimeListFragment extends Fragment {
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
         }
+
+        //No Crime
+
+        mNoCrimeLayout= (LinearLayout)view.findViewById(R.id.no_crimes_available);
+        mAddCrime =(Button)view.findViewById(R.id.add_crime_button);
 
         updateUI();
 
@@ -109,6 +116,8 @@ public class CrimeListFragment extends Fragment {
                 getActivity().invalidateOptionsMenu();
                 updateSubtitle();
                 return true;
+            case R.id.menu_item_delete_crime:
+                CrimeLab.get(getActivity()).
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -137,6 +146,23 @@ public class CrimeListFragment extends Fragment {
         } else {
             mAdapter.setCrimes(crimes);
             mAdapter.notifyDataSetChanged();
+        }
+
+        if(crimes.size() > 0){
+            mNoCrimeLayout.setVisibility(View.GONE);
+        }
+        else{
+            mNoCrimeLayout.setVisibility(View.VISIBLE);
+            mAddCrime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Crime crime = new Crime();
+                    CrimeLab.get(getActivity()).addCrime(crime);
+                    updateUI();
+                    mCallbacks.onCrimeSelected(crime);
+//                mNoCrimeLayout.setVisibility(View.INVISIBLE);
+                }
+            });
         }
 
         updateSubtitle();

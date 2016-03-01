@@ -59,17 +59,17 @@ public class TimePickerFragment extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         int hour = mTimePicker.getCurrentHour();
                         int minute = mTimePicker.getCurrentMinute();
+                        Date date = new GregorianCalendar(1, 1, 1, hour, minute).getTime();
 
 
-
-                        sendResult(Activity.RESULT_OK, time);
+                        sendResult(Activity.RESULT_OK, date);
 
 
                         }
                 }).create();
     }
 
-    private void sendResult(int resultCode, Time time) {
+    private void sendResult(int resultCode, Date time) {
         if (getTargetFragment() == null) {
             return;
         }
